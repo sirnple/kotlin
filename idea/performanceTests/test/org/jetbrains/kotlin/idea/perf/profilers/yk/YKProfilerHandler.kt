@@ -57,11 +57,21 @@ class YKProfilerHandler : ProfilerHandler {
                 String::class.java
             )
         }
+        private val startTracingMethod: Method = doOrThrow("com.yourkit.api.Controller#startTracing(String) not found") {
+            ykLibClass.getMethod(
+                "startTracing",
+                String::class.java
+            )
+        }
         private val captureSnapshotMethod: Method = doOrThrow("com.yourkit.api.Controller#captureSnapshot(long) not found") {
             ykLibClass.getMethod(
                 "captureSnapshot",
                 SNAPSHOT_WITHOUT_HEAP::class.java
             )
+        }
+
+        private val capturePerformanceSnapshotMethod: Method = doOrThrow("com.yourkit.api.Controller#capturePerformanceSnapshot() not found") {
+            ykLibClass.getMethod("capturePerformanceSnapshot")
         }
 
         private val stopCPUProfilingMethod: Method = doOrThrow("com.yourkit.api.Controller#stopCPUProfiling() not found") {

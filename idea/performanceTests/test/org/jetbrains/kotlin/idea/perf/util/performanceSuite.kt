@@ -178,7 +178,7 @@ class PerformanceSuite {
         }
 
         override fun close() {
-            application?.setDataProvider(null)
+            application.setDataProvider(null)
         }
 
         companion object {
