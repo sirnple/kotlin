@@ -138,7 +138,7 @@ org.jetbrains.kotlin.idea.intentions.declarations.JoinLinesTestGenerated.RemoveB
 org.jetbrains.kotlin.idea.intentions.declarations.JoinLinesTestGenerated.RemoveBraces.testIf, KT-34408,,
 org.jetbrains.kotlin.idea.intentions.declarations.JoinLinesTestGenerated.RemoveBraces.testNotSingleLineStatement, KT-34408,,
 org.jetbrains.kotlin.idea.intentions.declarations.JoinLinesTestGenerated.RemoveBraces.testWhenEntry, KT-34408,,
-org.jetbrains.kotlin.idea.intentions.IntentionTestGenerated.ConvertSealedClassToEnum.testWithNonObjectInheritors,,,
+org.jetbrains.kotlin.idea.intentions.IntentionTestGenerated.ConvertSealedClassToEnum.testWithNonObjectInheritors, Enum reorder,, FLAKY
 org.jetbrains.kotlin.idea.navigation.KotlinGotoImplementationMultiModuleTestGenerated.testExpectClassSuperclassFun,,, FLAKY
 org.jetbrains.kotlin.idea.parameterInfo.ParameterInfoTestGenerated.WithLib1.testUseJavaFromLib, KT-34542, FAIL,
 org.jetbrains.kotlin.idea.parameterInfo.ParameterInfoTestGenerated.WithLib2.testUseJavaSAMFromLib, KT-34542, FAIL,
@@ -178,7 +178,6 @@ org.jetbrains.kotlin.idea.repl.IdeReplCompletionTestGenerated.testDefinedExtensi
 org.jetbrains.kotlin.idea.resolve.ReferenceResolveInLibrarySourcesTestGenerated.testInLibrarySource, KT-34542, FAIL,
 org.jetbrains.kotlin.idea.resolve.ReferenceResolveInLibrarySourcesTestGenerated.testToFunParameter, KT-34542, FAIL,
 org.jetbrains.kotlin.idea.resolve.ReferenceResolveInLibrarySourcesTestGenerated.testToLocalFun, KT-34542, FAIL,
-org.jetbrains.kotlin.idea.script.ScriptConfigurationHighlightingTestGenerated.Highlighting.testCustomJavaHome, No Java,,
 org.jetbrains.kotlin.idea.scripting.gradle.GradleScriptInputsWatcherTest.testChangeInsideNonKtsFileInvalidatesOtherFiles, Assert: some script configuration loading tasks should be scheduled,,
 org.jetbrains.kotlin.idea.scripting.gradle.GradleScriptInputsWatcherTest.testChangeInsideSectionsInvalidatesOtherFiles, Assert: some script configuration loading tasks should be scheduled,,
 org.jetbrains.kotlin.idea.scripting.gradle.GradleScriptInputsWatcherTest.testChangeOutsideSectionsInvalidatesOtherFiles, Assert: some script configuration loading tasks should be scheduled,,
@@ -216,3 +215,4 @@ org.jetbrains.kotlin.jps.build.IncrementalConstantSearchTest.testJavaConstantCha
 org.jetbrains.kotlin.jps.build.IncrementalJvmJpsTestGenerated.WithJava.JavaUsedInKotlin.testConstantChanged, Incremental compilation in 201,,
 org.jetbrains.kotlin.idea.codeInsight.surroundWith.SurroundWithTestGenerated.If.MoveDeclarationsOut.Var.testVarWithTypeWoInitializer, Unprocessed,, FLAKY
 org.jetbrains.kotlin.idea.refactoring.pullUp.PullUpTestGenerated.K2K.testAccidentalOverrides, Unprocessed,, FLAKY
+org.jetbrains.kotlin.idea.refactoring.move.MoveTestGenerated.testKotlin_moveTopLevelDeclarations_moveFunctionToPackage_MoveFunctionToPackage, fail on TeamCity but works well locally,, FLAKY
