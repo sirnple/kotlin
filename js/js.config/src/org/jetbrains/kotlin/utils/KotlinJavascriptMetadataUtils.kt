@@ -65,6 +65,7 @@ object KotlinJavascriptMetadataUtils {
         "\"${Base64.getEncoder().encodeToString(content)}\");\n"
 
     @JvmStatic
+    @JvmOverloads
     fun loadMetadata(file: File, onError: (message: String) -> Unit = ::error): List<KotlinJavascriptMetadata> {
         if (!file.exists()) {
             onError("Library $file not found")
