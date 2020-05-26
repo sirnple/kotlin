@@ -59,6 +59,12 @@ import kotlin.collections.HashMap
 
 @Order(ExternalSystemConstants.UNORDERED + 1)
 open class KotlinMPPGradleProjectResolver : AbstractProjectResolverExtensionCompat() {
+    override fun requiresTaskRunning() = true
+
+    override fun getProjectsLoadedModelProvider() = ClassSetProjectImportModelProvider(
+        setOf(KotlinMPPGradleModel::class.java)
+    )
+
     override fun getToolingExtensionsClasses(): Set<Class<out Any>> {
         return setOf(KotlinMPPGradleModelBuilder::class.java, Unit::class.java)
     }
@@ -769,7 +775,8 @@ open class KotlinMPPGradleProjectResolver : AbstractProjectResolverExtensionComp
             if (fromModule.data == toModule.data) return
             val fromData = fromModule.data as? ModuleData ?: return
             val toData = toModule.data as? ModuleData ?: return
-            val existing = fromModule.children.mapNotNull { it.data as? ModuleDependencyData }.filter { it.target.id == (toModule.data as? ModuleData)?.id }
+            val existing = fromModule.children.mapNotNull { it.data as? ModuleDependencyData }
+                .filter { it.target.id == (toModule.data as? ModuleData)?.id }
             val nodeToModify =
                 existing.singleOrNull() ?: existing.firstOrNull { it.scope == DependencyScope.COMPILE } ?: existing.firstOrNull()
             if (nodeToModify != null) {

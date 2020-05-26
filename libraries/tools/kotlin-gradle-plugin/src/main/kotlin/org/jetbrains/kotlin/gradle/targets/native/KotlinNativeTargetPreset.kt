@@ -89,11 +89,7 @@ abstract class AbstractKotlinNativeTargetPreset<T : KotlinNativeTarget>(
         createTargetConfigurator().configureTarget(result)
 
         SingleActionPerProject.run(project, "setUpKotlinNativePlatformDependencies") {
-            project.gradle.addListener(object : BuildAdapter() {
-                override fun projectsEvaluated(gradle: Gradle) {
-                    project.setUpKotlinNativePlatformDependencies()
-                }
-            })
+            project.afterEvaluate { it.setUpKotlinNativePlatformDependencies() }
         }
 
         if (!konanTarget.enabledOnCurrentHost) {

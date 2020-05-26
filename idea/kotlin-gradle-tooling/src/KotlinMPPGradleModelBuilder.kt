@@ -46,6 +46,7 @@ class KotlinMPPGradleModelBuilder : ModelBuilderService {
     }
 
     override fun buildAll(modelName: String, project: Project): Any? {
+        setupCommonizerTask(project)
         val projectTargets = project.getTargets() ?: return null
         val dependencyResolver = DependencyResolverImpl(
             project,
@@ -96,6 +97,15 @@ class KotlinMPPGradleModelBuilder : ModelBuilderService {
 
     private fun isNativeDependencyPropagationEnabled(project: Project): Boolean {
         return (project.findProperty("kotlin.native.enableDependencyPropagation") as? String)?.toBoolean() ?: true
+    }
+
+    private fun setupCommonizerTask(project: Project) {
+        if (isHMPPEnabled(project) && !isNativeDependencyPropagationEnabled(project)) {
+            val startParameter = project.gradle.startParameter
+            val tasks = HashSet(startParameter.taskNames)
+            tasks.add("commonizerTask")
+            startParameter.setTaskNames(tasks)
+        }
     }
 
     private fun reportUnresolvedDependencies(targets: Collection<KotlinTarget>) {
