@@ -7,6 +7,7 @@ package org.jetbrains.kotlin.gradle.targets.native.internal
 
 import org.gradle.api.Project
 import org.gradle.api.file.FileCollection
+import org.gradle.api.tasks.TaskProvider
 import org.jetbrains.kotlin.compilerRunner.konanHome
 import org.jetbrains.kotlin.gradle.dsl.multiplatformExtensionOrNull
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
@@ -83,6 +84,9 @@ private class NativePlatformDependencyResolver(val project: Project, val kotlinV
     private var alreadyResolved = false
     private val dependencies = mutableMapOf<NativePlatformDependency, MutableList<(FileCollection) -> Unit>>()
 
+    private var commonizerTaskProvider: TaskProvider<CommonizerTask>? = null
+    private val commonizedLibsDirs = mutableMapOf<CommonizedCommon, File>()
+
     fun addForResolve(dependency: NativePlatformDependency, whenResolved: (FileCollection) -> Unit) {
         check(!alreadyResolved)
         dependencies.computeIfAbsent(dependency) { mutableListOf() }.add(whenResolved)
@@ -92,26 +96,32 @@ private class NativePlatformDependencyResolver(val project: Project, val kotlinV
         check(!alreadyResolved)
         alreadyResolved = true
 
-        val targetGroups: List<Pair<CommonizedCommon, Set<KonanTarget>>> = dependencies.keys.filterIsInstance<CommonizedCommon>()
-            .map { it to it.targets }
+        //register CommonizerTask only if needed
+        if (dependencies.keys.any { it is CommonizedCommon || it is CommonizedPlatform }) {
+            val targetGroups: List<Pair<CommonizedCommon, Set<KonanTarget>>> =
+                dependencies.keys
+                    .filterIsInstance<CommonizedCommon>()
+                    .map { it to it.targets }
 
-        val commonizerTaskParams = CommonizerTaskParams(
-            distributionDir,
-            distributionDir.resolve(KONAN_DISTRIBUTION_KLIB_DIR).resolve(KONAN_DISTRIBUTION_COMMONIZED_LIBS_DIR),
-            targetGroups.map { it.second },
-            kotlinVersion
-        )
+            val commonizerTaskParams = CommonizerTaskParams(
+                distributionDir,
+                distributionDir.resolve(KONAN_DISTRIBUTION_KLIB_DIR).resolve(KONAN_DISTRIBUTION_COMMONIZED_LIBS_DIR),
+                targetGroups.map { it.second },
+                kotlinVersion
+            )
 
-        val commonizerTaskProvider = project.registerTask(
-            COMMONIZER_TASK_NAME,
-            CommonizerTask::class.java,
-            listOf(commonizerTaskParams)
-        ) {}
+            commonizerTaskProvider = project.registerTask(
+                COMMONIZER_TASK_NAME,
+                CommonizerTask::class.java,
+                listOf(commonizerTaskParams)
+            ) {}
 
-        val commonizedLibsDirs: Map<CommonizedCommon, File> =
-            commonizerTaskParams.destinationDirs
-                .mapIndexed { index: Int, commonizedLibsDir: File -> targetGroups[index].first to commonizedLibsDir }
-                .toMap()
+            commonizedLibsDirs.putAll(
+                commonizerTaskParams.destinationDirs
+                    .mapIndexed { index: Int, commonizedLibsDir: File -> targetGroups[index].first to commonizedLibsDir }
+                    .toMap()
+            )
+        }
 
         // then, resolve dependencies one by one
         dependencies.forEach { (dependency, actions) ->

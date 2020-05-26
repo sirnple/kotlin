@@ -14,6 +14,7 @@ import org.gradle.api.artifacts.Dependency
 import org.gradle.api.artifacts.component.ProjectComponentIdentifier
 import org.gradle.api.file.FileCollection
 import org.gradle.api.file.SourceDirectorySet
+import org.gradle.api.internal.project.DefaultProject
 import org.gradle.api.logging.Logging
 import org.gradle.api.provider.Property
 import org.gradle.api.provider.Provider
@@ -100,10 +101,12 @@ class KotlinMPPGradleModelBuilder : ModelBuilderService {
     }
 
     private fun setupCommonizerTask(project: Project) {
-        if (isHMPPEnabled(project) && !isNativeDependencyPropagationEnabled(project)) {
+        project as? DefaultProject ?: return
+        val commonizerTaskName = "commonizerTask"
+        if (project.getTasksByName(commonizerTaskName, false).isNotEmpty()) {
             val startParameter = project.gradle.startParameter
             val tasks = HashSet(startParameter.taskNames)
-            tasks.add("commonizerTask")
+            tasks.add(commonizerTaskName)
             startParameter.setTaskNames(tasks)
         }
     }
